@@ -2,9 +2,11 @@ Team Details:
 
 Team No : 2442
 Team Leader: Mayank Kumar Jha
+
 Email Id:mayank.jha.ug24@nsut.ac.in
 
 Team Member : Nikhil Anand 
+
 Email Id: nikhilanand18132@gmail.com
 
 Problem Statement :StackIt is a minimal question-and-answer platform that supports collaborative learning and structured knowledge sharing. It’s designed to be sim ple, user- friendly,
