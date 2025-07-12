@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Search Questions - StackIt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .nav-bar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .nav-bar a {
+      text-decoration: none;
+      font-size: 20px;
+      color: #000;
+    }
+    .nav-icons {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    .logo {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .form-container {
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border: none;
+      background: #000;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #333;
+    }
+    .question-list {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 500px;
+      text-align: left;
+    }
+    .question-item {
+      padding: 14px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .question-item strong {
+      font-size: 16px;
+    }
+    .question-item small {
+      display: block;
+      color: #666;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="nav-bar">
+    <a href="index.html" title="Go to Home">🏠</a>
+  </div>
+
+  <div class="nav-icons">
+    <a href="#">🔔<span id="notiCount">0</span></a>
+  </div>
+
+  <div class="logo">🗨️ QA</div>
+
+  <div class="form-container">
+    <h2>Search Questions</h2>
+    <input type="text" id="searchInput" placeholder="Search by keywords or tags">
+    <button onclick="searchQuestions()">Search</button>
+  </div>
+
+  <div class="question-list" id="questionList">
+  </div>
+
+  <script>
+    let noti = parseInt(localStorage.getItem("stackit_notifications") || "0");
+    document.getElementById("notiCount").innerText = noti;
+
+    const allQuestions = JSON.parse(localStorage.getItem("stackit_questions") || "[]");
+
+    function render(questions) {
+      const list = document.getElementById("questionList");
+      list.innerHTML = "";
+
+      if (questions.length === 0) {
+        list.innerHTML = "<p>No matching questions found.</p>";
+        return;
+      }
+
+      questions.forEach((q, index) => {
+        const item = document.createElement("div");
+        item.className = "question-item";
+        item.innerHTML = `
+          <strong>${q.title}</strong>
+          <small>Tags: ${q.tags || "None"}</small>
+          <small>Asked by: ${q.email}</small>
+          <small>Time: ${q.time}</small>
+        `;
+        item.onclick = () => {
+          localStorage.setItem("stackit_selectedQuestion", index);
+          window.location.href = "answer.html";
+        };
+        list.appendChild(item);
+      });
+    }
+
+    function searchQuestions() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const results = allQuestions.filter(q =>
+        q.title.toLowerCase().includes(input) ||
+        (q.tags && q.tags.toLowerCase().includes(input))
+      );
+      render(results);
+    }
+
+    render(allQuestions);
+  </script>
+
+</body>
+</html>

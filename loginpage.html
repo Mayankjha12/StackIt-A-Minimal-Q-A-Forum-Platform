@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Login - StackIt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .logo {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .form-container {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      background: #000;
+      color: #fff;
+      border: none;
+      font-size: 16px;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #333;
+    }
+    a {
+      text-decoration: none;
+      color: #000;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">🗨️ QA</div>
+  <div class="form-container">
+    <h2>Welcome</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Enter your email" required>
+      <input type="password" id="password" placeholder="Enter your password" required>
+      <button type="submit">Log in to StackIt</button>
+    </form>
+    <p><a href="register.html">New here? Register</a></p>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      const users = JSON.parse(localStorage.getItem("stackit_users") || "[]");
+      const found = users.find(u => u.email === email && u.password === pass);
+
+      if (found) {
+        localStorage.setItem("stackit_loggedIn", "1");
+        localStorage.setItem("stackit_email", email);
+        alert("✅ Login successful!");
+        window.location.href = "index.html";
+      } else {
+        alert("❌ Invalid email or password.");
+      }
+    });
+  </script>
+
+</body>
+</html>

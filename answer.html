@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Answer Question - StackIt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .nav-bar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .nav-bar a {
+      text-decoration: none;
+      font-size: 20px;
+      color: #000;
+    }
+    .nav-icons {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    #notiCount {
+      background: red;
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 50%;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+    .logo {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    .question {
+      max-width: 600px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .question h3 {
+      margin: 0 0 10px 0;
+    }
+    .question small {
+      color: #555;
+    }
+    .vote {
+      display: flex;
+      gap: 15px;
+      font-size: 24px;
+      margin-top: 12px;
+    }
+    .vote span {
+      cursor: pointer;
+    }
+    .answer-form {
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      height: 120px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      background: #000;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #333;
+    }
+    .answers {
+      max-width: 600px;
+      margin-top: 20px;
+    }
+    .answer-box {
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #f9f9f9;
+      text-align: left;
+    }
+    .answer-box small {
+      color: #555;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="nav-bar">
+    <a href="index.html" title="Go to Home">🏠</a>
+  </div>
+
+  <div class="nav-icons">
+    <a href="#">🔔<span id="notiCount">0</span></a>
+  </div>
+
+  <div class="logo">🗨️ QA</div>
+
+  <div class="question" id="questionBox">
+  </div>
+
+  <div class="answer-form">
+    <form id="answerForm">
+      <textarea id="answerText" placeholder="Write your answer here..." required></textarea>
+      <button type="submit">Post Answer</button>
+    </form>
+  </div>
+
+  <div class="answers" id="answersList">
+  </div>
+
+  <script>
+    let noti = parseInt(localStorage.getItem("stackit_notifications") || "0");
+    document.getElementById("notiCount").innerText = noti;
+
+    const qIndex = parseInt(localStorage.getItem("stackit_selectedQuestion") || "-1");
+    const all = JSON.parse(localStorage.getItem("stackit_questions") || "[]");
+
+    if (qIndex === -1 || !all[qIndex]) {
+      alert("Question not found");
+      window.location.href = "searchpage.html";
+    }
+
+    const question = all[qIndex];
+    const email = localStorage.getItem("stackit_email");
+    const qDiv = document.getElementById("questionBox");
+
+    qDiv.innerHTML = `
+      <h3>${question.title}</h3>
+      <p>${question.desc}</p>
+      <small>Tags: ${question.tags || "None"}<br>
+      Asked by: ${question.email}<br>
+      Time: ${question.time}</small>
+      <div class="vote">
+        <span onclick="alert('Upvoted!')">👍</span>
+        <span onclick="alert('Downvoted!')">👎</span>
+        <button onclick="alert('✅ Answer marked as accepted!')">✅ Accept</button>
+      </div>
+    `;
+
+    function showAnswers() {
+      const container = document.getElementById("answersList");
+      container.innerHTML = "";
+      if (!question.answers || question.answers.length === 0) return;
+      question.answers.forEach(a => {
+        const box = document.createElement("div");
+        box.className = "answer-box";
+        box.innerHTML = `
+          <p>${a.text}</p>
+          <small>Answered by: ${a.email} | ${a.time}</small>
+        `;
+        container.appendChild(box);
+      });
+    }
+
+    showAnswers();
+
+    document.getElementById("answerForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const ans = document.getElementById("answerText").value.trim();
+      if (!ans) return;
+      const newAns = {
+        text: ans,
+        email: email,
+        time: new Date().toLocaleString()
+      };
+      question.answers.push(newAns);
+      all[qIndex] = question;
+      localStorage.setItem("stackit_questions", JSON.stringify(all));
+      let noti = parseInt(localStorage.getItem("stackit_notifications") || "0");
+      localStorage.setItem("stackit_notifications", noti + 1);
+      this.reset();
+      showAnswers();
+    });
+  </script>
+
+</body>
+</html>

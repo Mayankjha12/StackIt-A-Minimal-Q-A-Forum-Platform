@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Profile - StackIt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .logo {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    .profile-box {
+      padding: 30px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      text-align: center;
+      max-width: 400px;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 16px;
+      margin: 6px 0;
+    }
+    a {
+      margin-top: 15px;
+      display: inline-block;
+      padding: 10px 20px;
+      background: #000;
+      color: #fff;
+      border-radius: 25px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">🗨️ QA</div>
+  <div class="profile-box">
+    <h2>Your Profile</h2>
+    <p><strong>Email:</strong> <span id="emailInfo"></span></p>
+    <a href="index.html">← Back to Home</a>
+  </div>
+
+  <script>
+    const email = localStorage.getItem("stackit_email");
+    if (!email) {
+      alert("⚠️ Please log in first.");
+      window.location.href = "loginpage.html";
+    }
+    document.getElementById("emailInfo").textContent = email;
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Register - StackIt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .logo {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .form-container {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      background: #000;
+      color: #fff;
+      border: none;
+      font-size: 16px;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #333;
+    }
+    a {
+      text-decoration: none;
+      color: #000;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">🗨️ QA</div>
+  <div class="form-container">
+    <h2>Create your account</h2>
+    <form id="registerForm">
+      <input type="email" id="email" placeholder="Enter email" required>
+      <input type="password" id="password" placeholder="Create password" required>
+      <button type="submit">Register</button>
+    </form>
+    <p><a href="loginpage.html">Already have an account? Login</a></p>
+  </div>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const pass = document.getElementById("password").value.trim();
+
+      if (!email || !pass) return;
+
+      const users = JSON.parse(localStorage.getItem("stackit_users") || "[]");
+      if (users.find(u => u.email === email)) {
+        alert("❗ User already exists.");
+        return;
+      }
+
+      users.push({ email, password: pass });
+      localStorage.setItem("stackit_users", JSON.stringify(users));
+      alert("✅ Registration successful! You can now login.");
+      window.location.href = "loginpage.html";
+    });
+  </script>
+
+</body>
+</html>
